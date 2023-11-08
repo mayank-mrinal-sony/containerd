@@ -124,7 +124,12 @@ func TestContainerStart(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), withExitStatus(7)))
+	container, err := client.NewContainer(ctx,
+		id,
+		WithNewSnapshot(id, image),
+		WithNewSpec(oci.WithImageConfig(image), withExitStatus(7)),
+		runtimeOpts,
+	)
 	if err != nil {
 		t.Fatal(err)
 	}
