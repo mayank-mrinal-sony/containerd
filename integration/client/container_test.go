@@ -88,7 +88,7 @@ func TestNewContainer(t *testing.T) {
 	ctx, cancel := testContext(t)
 	defer cancel()
 
-	container, err := client.NewContainer(ctx, id, WithNewSpec())
+	container, err := client.NewContainer(ctx, id, WithNewSpec(), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -224,7 +224,7 @@ func TestContainerStartWithAbsRuntimePath(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), withExitStatus(7)))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), withExitStatus(7)), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -321,7 +321,7 @@ func TestContainerOutput(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), withProcessArgs("echo", expected)))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), withProcessArgs("echo", expected)), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -389,7 +389,7 @@ func TestContainerExec(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -474,7 +474,7 @@ func TestContainerLargeExecArgs(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -550,7 +550,7 @@ func TestContainerPids(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -646,7 +646,7 @@ func TestContainerCloseIO(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), withCat()))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), withCat()), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -702,7 +702,7 @@ func TestDeleteRunningContainer(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -757,7 +757,7 @@ func TestContainerKill(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -825,7 +825,7 @@ func TestKillContainerDeletedByRunc(t *testing.T) {
 	container, err := client.NewContainer(ctx, id,
 		WithNewSnapshot(id, image),
 		WithNewSpec(oci.WithImageConfig(image), longCommand),
-		WithRuntime(client.Runtime(), &options.Options{Root: runcRoot}))
+		WithRuntime(client.Runtime(), &options.Options{Root: runcRoot}), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -890,7 +890,7 @@ func TestContainerNoBinaryExists(t *testing.T) {
 
 	container, err := client.NewContainer(ctx, id,
 		WithNewSnapshot(id, image),
-		WithNewSpec(oci.WithImageConfig(image), oci.WithProcessArgs("nothing")))
+		WithNewSpec(oci.WithImageConfig(image), oci.WithProcessArgs("nothing")), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -935,7 +935,7 @@ func TestContainerExecNoBinaryExists(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1000,7 +1000,7 @@ func TestWaitStoppedTask(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), withExitStatus(7)))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), withExitStatus(7)), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1066,7 +1066,7 @@ func TestWaitStoppedProcess(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1153,7 +1153,7 @@ func TestTaskForceDelete(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1194,7 +1194,7 @@ func TestProcessForceDelete(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1271,7 +1271,7 @@ func TestContainerHostname(t *testing.T) {
 	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image),
 		withProcessArgs("hostname"),
 		oci.WithHostname(expected),
-	))
+	), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1336,7 +1336,7 @@ func TestContainerExitedAtSet(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), withTrue()))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), withTrue()), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1396,7 +1396,7 @@ func TestDeleteContainerExecCreated(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1464,7 +1464,7 @@ func TestContainerMetrics(t *testing.T) {
 	}
 	container, err := client.NewContainer(ctx, id,
 		WithNewSnapshot(id, image),
-		WithNewSpec(oci.WithImageConfig(image), longCommand))
+		WithNewSpec(oci.WithImageConfig(image), longCommand), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1518,7 +1518,7 @@ func TestDeletedContainerMetrics(t *testing.T) {
 	}
 	container, err := client.NewContainer(ctx, id,
 		WithNewSnapshot(id, image),
-		WithNewSpec(oci.WithImageConfig(image), withExitStatus(0)))
+		WithNewSpec(oci.WithImageConfig(image), withExitStatus(0)), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1563,7 +1563,7 @@ func TestContainerExtensions(t *testing.T) {
 	defer client.Close()
 
 	ext := gogotypes.Any{TypeUrl: "test.ext.url", Value: []byte("hello")}
-	container, err := client.NewContainer(ctx, id, WithNewSpec(), WithContainerExtension("hello", &ext))
+	container, err := client.NewContainer(ctx, id, WithNewSpec(), WithContainerExtension("hello", &ext), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1607,7 +1607,7 @@ func TestContainerUpdate(t *testing.T) {
 	}
 	defer client.Close()
 
-	container, err := client.NewContainer(ctx, id, WithNewSpec())
+	container, err := client.NewContainer(ctx, id, WithNewSpec(), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1652,7 +1652,7 @@ func TestContainerInfo(t *testing.T) {
 	}
 	defer client.Close()
 
-	container, err := client.NewContainer(ctx, id, WithNewSpec())
+	container, err := client.NewContainer(ctx, id, WithNewSpec(), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1682,7 +1682,7 @@ func TestContainerLabels(t *testing.T) {
 
 	container, err := client.NewContainer(ctx, id, WithNewSpec(), WithContainerLabels(map[string]string{
 		"test": "yes",
-	}))
+	}), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1755,7 +1755,7 @@ func TestContainerHook(t *testing.T) {
 		}
 		return nil
 	}
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), hook))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), hook), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1799,7 +1799,7 @@ func TestShimSockLength(t *testing.T) {
 	// but 64 bytes of sha256 is the common case
 	container, err := client.NewContainer(ctx, id,
 		WithNewSnapshot(id, image),
-		WithNewSpec(oci.WithImageConfig(image), withExitStatus(0)),
+		WithNewSpec(oci.WithImageConfig(image), withExitStatus(0)), runtimeOpts,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -1849,7 +1849,7 @@ func TestContainerExecLargeOutputWithTTY(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1945,7 +1945,7 @@ func TestShortRunningTaskPid(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), shortCommand))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), shortCommand), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2010,7 +2010,7 @@ func TestRegressionIssue4769(t *testing.T) {
 	container, err := client.NewContainer(ctx, id,
 		WithNewSnapshot(id, image),
 		WithNewSpec(oci.WithImageConfig(image), withTrue()),
-		WithRuntime(client.Runtime(), nil),
+		WithRuntime(client.Runtime(), nil), runtimeOpts,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -2118,7 +2118,7 @@ func TestRegressionIssue6429(t *testing.T) {
 	container, err := client.NewContainer(ctx, id,
 		WithNewSnapshot(id, image),
 		WithNewSpec(oci.WithImageConfig(image), withProcessArgs("notfound404")),
-		WithRuntime(client.Runtime(), nil),
+		WithRuntime(client.Runtime(), nil), runtimeOpts,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -2163,7 +2163,7 @@ func TestDaemonRestart(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2285,7 +2285,7 @@ func initContainerAndCheckChildrenDieOnKill(t *testing.T, opts ...oci.SpecOpts) 
 
 	container, err := client.NewContainer(ctx, id,
 		WithNewSnapshot(id, image),
-		WithNewSpec(opts...),
+		WithNewSpec(opts...), runtimeOpts,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -2368,7 +2368,7 @@ func TestTaskResize(t *testing.T) {
 
 	container, err := client.NewContainer(ctx, id,
 		WithNewSnapshot(id, image),
-		WithNewSpec(oci.WithImageConfig(image), withProcessArgs("/bin/stty", "size"), oci.WithTTY),
+		WithNewSpec(oci.WithImageConfig(image), withProcessArgs("/bin/stty", "size"), oci.WithTTY), runtimeOpts,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -2429,7 +2429,7 @@ func TestContainerImage(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSpec(), WithImage(image))
+	container, err := client.NewContainer(ctx, id, WithNewSpec(), WithImage(image), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2457,7 +2457,7 @@ func TestContainerNoImage(t *testing.T) {
 	}
 	defer client.Close()
 
-	container, err := client.NewContainer(ctx, id, WithNewSpec())
+	container, err := client.NewContainer(ctx, id, WithNewSpec(), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2492,7 +2492,7 @@ func TestContainerNoSTDIN(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), withExitStatus(0)))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), withExitStatus(0)), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2542,7 +2542,7 @@ func TestTaskSpec(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), longCommand), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2628,7 +2628,7 @@ func TestContainerUsername(t *testing.T) {
 	// the www-data user in the busybox image has a uid of 33
 	container, err := client.NewContainer(ctx, id,
 		WithNewSnapshot(id, image),
-		WithNewSpec(oci.WithImageConfig(image), oci.WithUsername(username), withProcessArgs(command...)),
+		WithNewSpec(oci.WithImageConfig(image), oci.WithUsername(username), withProcessArgs(command...)), runtimeOpts,
 	)
 	if err != nil {
 		t.Fatal(err)
@@ -2681,7 +2681,7 @@ func TestContainerPTY(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), oci.WithTTY, withProcessArgs("echo", "hello")))
+	container, err := client.NewContainer(ctx, id, WithNewSnapshot(id, image), WithNewSpec(oci.WithImageConfig(image), oci.WithTTY, withProcessArgs("echo", "hello")), runtimeOpts)
 	if err != nil {
 		t.Fatal(err)
 	}
